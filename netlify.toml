@@ -1,0 +1,7 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+# Enable official Next.js plugin for SSR/ISR support on Netlify
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
