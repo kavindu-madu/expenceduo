@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Users, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { CurrencySelector } from '@/components/currency-selector';
 import type { User } from '@/lib/types';
 
 interface DashboardHeaderProps {
@@ -20,12 +21,15 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
             {user}
           </h1>
         </div>
-        <Button asChild variant="outline">
-          <Link href="/">
-            <LogOut className="mr-2 h-4 w-4" />
-            Switch User
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <CurrencySelector />
+          <Button asChild variant="outline">
+            <Link href="/">
+              <LogOut className="mr-2 h-4 w-4" />
+              Switch User
+            </Link>
+          </Button>
+        </div>
       </div>
     </header>
   );

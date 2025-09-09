@@ -3,6 +3,7 @@
 import { Bar, BarChart, CartesianGrid, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Legend, Cell } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useCurrency } from "@/contexts/currency-context";
 import type { Expense, User } from "@/lib/types";
 
 interface ExpenseChartsProps {
@@ -18,6 +19,7 @@ const COLORS = {
 };
 
 export default function ExpenseCharts({ allExpenses, currentUser }: ExpenseChartsProps) {
+  const { formatAmount } = useCurrency();
   const userIO = allExpenses
     .filter((e) => e.user === currentUser)
     .reduce(
@@ -70,7 +72,7 @@ export default function ExpenseCharts({ allExpenses, currentUser }: ExpenseChart
                       <Cell key={`cell-${index}`} fill={COLORS[entry.name]} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value)} />
+                  <Tooltip formatter={(value: number) => formatAmount(value)} />
                   <Legend />
                 </PieChart>
               </ResponsiveContainer>
@@ -82,8 +84,8 @@ export default function ExpenseCharts({ allExpenses, currentUser }: ExpenseChart
                     <BarChart data={barChartData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="name" />
-                        <YAxis tickFormatter={(value) => `$${value}`} />
-                        <Tooltip formatter={(value: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value)} />
+                        <YAxis tickFormatter={(value) => formatAmount(value)} />
+                        <Tooltip formatter={(value: number) => formatAmount(value)} />
                         <Bar dataKey="expenses">
                            {barChartData.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={entry.name === "Samila" ? COLORS.Samila : COLORS.Amaya} />

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getExpenses } from "@/lib/mock-data";
+import { getExpensesByUser } from "@/lib/firebase-db";
 import type { User } from "@/lib/types";
 
 import DashboardHeader from "@/components/dashboard-header";
@@ -10,22 +10,23 @@ import ExpenseCharts from "@/components/expense-charts";
 import AiComparison from "@/components/ai-comparison";
 
 interface DashboardPageProps {
-  params: {
+  params: Promise<{
     user: string;
-  };
+  }>;
 }
 
 const validUsers: User[] = ["Samila", "Amaya"];
 
 export default async function DashboardPage({ params }: DashboardPageProps) {
-  const currentUser = params.user as User;
+  const { user } = await params;
+  const currentUser = user as User;
 
   if (!validUsers.includes(currentUser)) {
     notFound();
   }
 
-  const allExpenses = await getExpenses();
-  const userExpenses = allExpenses.filter((e) => e.user === currentUser);
+  const userExpenses = await getExpensesByUser(currentUser);
+  const allExpenses = userExpenses; // For components that need all expenses, we'll use user expenses for now
 
   return (
     <div className="flex flex-col min-h-screen bg-background">

@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import ExpenseForm from "@/components/expense-form";
 import { useToast } from "@/hooks/use-toast";
+import { useCurrency } from "@/contexts/currency-context";
 import { deleteExpenseAction } from "@/app/actions";
 import type { Expense, User } from "@/lib/types";
 
@@ -42,6 +43,7 @@ interface ExpenseListProps {
 
 export default function ExpenseList({ initialExpenses, user }: ExpenseListProps) {
   const { toast } = useToast();
+  const { formatAmount } = useCurrency();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
@@ -75,7 +77,6 @@ export default function ExpenseList({ initialExpenses, user }: ExpenseListProps)
     setSelectedExpense(null);
   };
   
-  const formatCurrency = (amount: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(amount);
 
   return (
     <>
@@ -107,7 +108,7 @@ export default function ExpenseList({ initialExpenses, user }: ExpenseListProps)
                     </TableCell>
                     <TableCell className={`text-right font-semibold ${expense.type === 'Income' ? 'text-green-600' : 'text-red-600'}`}>
                       {expense.type === "Income" ? "+" : "-"}
-                      {formatCurrency(expense.amount)}
+                      {formatAmount(expense.amount)}
                     </TableCell>
                     <TableCell>{format(new Date(expense.date), "MMM d, yyyy")}</TableCell>
                     <TableCell>

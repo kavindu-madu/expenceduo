@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import * as mockData from "@/lib/mock-data";
+import * as firebaseDb from "@/lib/firebase-db";
 import { compareExpenses } from "@/ai/flows/compare-expenses";
 import type { User } from "@/lib/types";
 
@@ -25,7 +25,7 @@ export async function addExpenseAction(formData: FormData) {
     return { error: "Invalid data provided." };
   }
 
-  await mockData.addExpense(validatedFields.data);
+  await firebaseDb.addExpense(validatedFields.data);
   revalidatePath(`/dashboard/${validatedFields.data.user}`);
   return { success: "Entry added successfully." };
 }
@@ -42,13 +42,13 @@ export async function updateExpenseAction(id: string, formData: FormData) {
     return { error: "Invalid data provided." };
   }
 
-  await mockData.updateExpense(id, validatedFields.data);
+  await firebaseDb.updateExpense(id, validatedFields.data);
   revalidatePath(`/dashboard/${user}`);
   return { success: "Entry updated successfully." };
 }
 
 export async function deleteExpenseAction(id: string, user: User) {
-  await mockData.deleteExpense(id);
+  await firebaseDb.deleteExpense(id);
   revalidatePath(`/dashboard/${user}`);
   return { success: "Entry deleted successfully." };
 }

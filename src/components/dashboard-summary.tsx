@@ -1,5 +1,8 @@
+"use client";
+
 import { ArrowDownLeft, ArrowUpRight, Scale, User as UserIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useCurrency } from "@/contexts/currency-context";
 import type { Expense, User } from "@/lib/types";
 
 interface DashboardSummaryProps {
@@ -7,14 +10,8 @@ interface DashboardSummaryProps {
   currentUser: User;
 }
 
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(amount);
-};
-
 export default function DashboardSummary({ allExpenses, currentUser }: DashboardSummaryProps) {
+  const { formatAmount } = useCurrency();
   const calculations = allExpenses.reduce(
     (acc, expense) => {
       if (expense.type === "Income") {
@@ -43,14 +40,14 @@ export default function DashboardSummary({ allExpenses, currentUser }: Dashboard
   const amayaShare = calculations.amayaExpenses;
   
   const summaryCards = [
-    { title: "Total Income", value: formatCurrency(calculations.totalIncome), Icon: ArrowUpRight, color: "text-green-500" },
-    { title: "Total Expenses", value: formatCurrency(calculations.totalExpenses), Icon: ArrowDownLeft, color: "text-red-500" },
-    { title: "Balance", value: formatCurrency(balance), Icon: Scale, color: "text-blue-500" },
+    { title: "Total Income", value: formatAmount(calculations.totalIncome), Icon: ArrowUpRight, color: "text-green-500" },
+    { title: "Total Expenses", value: formatAmount(calculations.totalExpenses), Icon: ArrowDownLeft, color: "text-red-500" },
+    { title: "Balance", value: formatAmount(balance), Icon: Scale, color: "text-blue-500" },
   ];
 
   const shareCards = [
-    { name: "Samila", share: formatCurrency(samilaShare) },
-    { name: "Amaya", share: formatCurrency(amayaShare) },
+    { name: "Samila", share: formatAmount(samilaShare) },
+    { name: "Amaya", share: formatAmount(amayaShare) },
   ]
 
   return (

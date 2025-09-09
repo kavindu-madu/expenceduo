@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useCurrency } from "@/contexts/currency-context";
 import { getAiComparisonAction } from "@/app/actions";
 import type { Expense, User } from "@/lib/types";
 
@@ -16,6 +17,7 @@ interface AiComparisonProps {
 }
 
 export default function AiComparison({ user, expenses }: AiComparisonProps) {
+  const { formatAmount } = useCurrency();
   const [location, setLocation] = useState("New York, NY");
   const [income, setIncome] = useState(75000);
   const [isLoading, setIsLoading] = useState(false);
@@ -53,6 +55,10 @@ export default function AiComparison({ user, expenses }: AiComparisonProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div className="p-3 bg-muted rounded-lg">
+          <div className="text-sm text-muted-foreground">Your Total Expenses</div>
+          <div className="text-lg font-semibold">{formatAmount(totalExpenses)}</div>
+        </div>
         <div>
             <Label htmlFor="location">Your Location</Label>
             <Input id="location" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="e.g., San Francisco, CA" />
